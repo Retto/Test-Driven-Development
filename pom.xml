@@ -46,6 +46,11 @@
 			<artifactId>validation-api</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>com.stripe</groupId>
+			<artifactId>stripe-java</artifactId>
+			<version>19.2.0</version>
+		</dependency>
 
 	</dependencies>
 

@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PaymentService {
 
-	private static final List<Currency> ACCEPTED_CURRENCIES = List.of(Currency.values());
+	private static final List<Currency> ACCEPTED_CURRENCIES = List.of(Currency.EUR, Currency.USD);
 	
 	private final CustomerRepository customerRepository;
 	private final PaymentRepository paymentRepository;
