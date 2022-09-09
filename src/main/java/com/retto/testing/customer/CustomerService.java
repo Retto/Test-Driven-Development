@@ -3,6 +3,7 @@ package com.retto.testing.customer;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -10,10 +11,15 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
+// @RequiredArgsConstructor
 public class CustomerService {
 	
 	private final CustomerRepository customerRepository;
+	
+    @Autowired
+    public CustomerService(CustomerRepository customerRepository) {
+        this.customerRepository = customerRepository;
+    }
 	
 	public void registerNewCustomer(CustomerRegistrationRequest request)
 	{

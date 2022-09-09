@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import com.retto.testing.payment.CardPaymentCharge;
@@ -17,8 +18,13 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@ConditionalOnProperty(
+        value = "stripe.enabled",
+        havingValue = "true"
+)
 public class StripeService implements CardPaymentCharger {
 
+	
 	private final StripeApi stripeApi;
 	
 	private final static RequestOptions REQUEST_OPTIONS = RequestOptions.builder().setApiKey("sk_test_4eC39HqLyjWDarjtT1zdp7dc").build();
