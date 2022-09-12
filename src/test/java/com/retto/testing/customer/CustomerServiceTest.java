@@ -10,6 +10,8 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import com.retto.testing.utils.PhoneNumberValidator;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.*;
@@ -19,6 +21,9 @@ public class CustomerServiceTest {
   @Mock  	
   private CustomerRepository customerRepository;
   
+  @Mock  	
+  private PhoneNumberValidator phoneNumberValidator;
+  
   @Captor
   private ArgumentCaptor<Customer> customerArgumentCaptor;
 	
@@ -27,7 +32,7 @@ public class CustomerServiceTest {
   @BeforeEach
   void setUp() {
 	  MockitoAnnotations.openMocks(this);
-	  underTest = new CustomerService(customerRepository);
+	  underTest = new CustomerService(customerRepository, phoneNumberValidator);
   }
   
   @Test
@@ -41,6 +46,8 @@ public class CustomerServiceTest {
 	  
 	  // no customer with phone number passed
 	  given(customerRepository.findByPhoneNumber(phoneNumber)).willReturn(Optional.empty());
+	  
+	  given(phoneNumberValidator.test(phoneNumber)).willReturn(true);
 	    
 	  // When
 	  underTest.registerNewCustomer(request);
@@ -49,6 +56,28 @@ public class CustomerServiceTest {
 	  then(customerRepository).should().save(customerArgumentCaptor.capture());
 	  Customer captorCustomer = customerArgumentCaptor.getValue();
 	  assertThat(captorCustomer).isEqualTo(customer);
+  }
+  
+  @Test
+  void itShouldNotSaveNewCustomerWhenPhoneNumberIsInvalid() {
+	  // Given a phone number
+      String phoneNumber = "1234";
+      Customer customer = new Customer(UUID.randomUUID(), "Retto", phoneNumber);
+
+      // init a request
+      CustomerRegistrationRequest request = new CustomerRegistrationRequest(customer);
+
+
+      // non-valid phone number
+      given(phoneNumberValidator.test(phoneNumber)).willReturn(false);
+
+      // When
+      assertThatThrownBy(() -> underTest.registerNewCustomer(request))
+              .isInstanceOf(IllegalStateException.class)
+              .hasMessageContaining(String.format("Phone number is not valid:%s", phoneNumber));
+
+      // Then
+      then(customerRepository).shouldHaveNoInteractions();
   }
   
   @Test
@@ -62,6 +91,8 @@ public class CustomerServiceTest {
 	  
 	  // no customer with phone number passed
 	  given(customerRepository.findByPhoneNumber(phoneNumber)).willReturn(Optional.empty());
+	  
+	  given(phoneNumberValidator.test(phoneNumber)).willReturn(true);
 	  
 	  // When
 	  underTest.registerNewCustomer(request);
@@ -86,6 +117,8 @@ public class CustomerServiceTest {
       given(customerRepository.findByPhoneNumber(phoneNumber))
               .willReturn(Optional.of(customer));
       
+      given(phoneNumberValidator.test(phoneNumber)).willReturn(true);
+      
       // When
       underTest.registerNewCustomer(request);
 
@@ -107,6 +140,7 @@ public class CustomerServiceTest {
       given(customerRepository.findByPhoneNumber(phoneNumber))
               .willReturn(Optional.of(customerTwo));
 
+      given(phoneNumberValidator.test(phoneNumber)).willReturn(true);
       // When
       
       // Then

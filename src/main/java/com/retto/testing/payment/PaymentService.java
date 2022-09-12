@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.retto.testing.customer.Customer;
@@ -13,7 +12,7 @@ import com.retto.testing.customer.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
-// @RequiredArgsConstructor
+@RequiredArgsConstructor
 public class PaymentService {
 
 	private static final List<Currency> ACCEPTED_CURRENCIES = List.of(Currency.EUR, Currency.USD);
@@ -21,15 +20,6 @@ public class PaymentService {
 	private final CustomerRepository customerRepository;
 	private final PaymentRepository paymentRepository;
 	private final CardPaymentCharger cardPaymentCharger;
-
-    @Autowired
-    public PaymentService(CustomerRepository customerRepository,
-                          PaymentRepository paymentRepository,
-                          CardPaymentCharger cardPaymentCharger) {
-        this.customerRepository = customerRepository;
-        this.paymentRepository = paymentRepository;
-        this.cardPaymentCharger = cardPaymentCharger;
-    }
     
 	void chargeCard(UUID customerId, PaymentRequest paymentRequest) {
 		// 1. check customer exists

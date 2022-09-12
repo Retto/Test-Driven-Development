@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,12 +34,19 @@ public class PaymentIntegrationTest {
 	@Autowired
 	private MockMvc mockMvc;
 
+	/* 
+	 * Without @transactional annotation. 
+	 * We receives Customer with id not found exception. 
+	 * Reason: transaction does not commit yet when the test method runs. So, the repository customerRepository.findById() method call returns null.
+     * We need a transactional request if the pom version is equal to 2.7.3. 
+	 * */
+	@Transactional
 	@Test
 	void itShouldCreatePaymentSuccessfully() throws Exception {
 		// Given
 		// create customer
 		UUID customerId = UUID.randomUUID();
-		Customer customer = new Customer(customerId, "Retto", "1234");
+		Customer customer = new Customer(customerId, "Retto", "+170000000000");
 
 		CustomerRegistrationRequest customerRegistrationRequest = new CustomerRegistrationRequest(customer);
 
