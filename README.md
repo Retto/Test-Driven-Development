@@ -1,5 +1,4 @@
 # Test-Driven-Development
-
 Sample project for TDD. 
 
 - Unit Testing
@@ -10,9 +9,10 @@ Sample project for TDD.
 - Behavior Driven Development (BDD)
 
 # Notes
+## @Mock
+We can do this either by using the **@RunWith(MockitoJUnitRunner.class)** to run the test, or by calling the **MockitoAnnotations.openMocks()** method explicitly.
 
 ## @Mock vs @MockBean
-
 **@Mock** annotation mock the class only for the specified test class.
 
 We can use the **@MockBean** to add mock objects to the Spring application context. The mock will replace any existing bean of the same type in the application context.
@@ -45,7 +45,6 @@ public class MockBeanAnnotationIntegrationTest {
 ```
 
 ## @Mock vs @Spy
-
 **@Mock:** Nullified object of the class. All methods and fields are nullified. (objects equals null, primitives equals default values)
 
 **@Spy:** Regular object of the class.  
@@ -54,6 +53,21 @@ Both can be used to mock methods or fields. The difference is that in mock, you 
 
 While in spy objects, of course, since it is a real method, when you are not stubbing the method, then it will call the real method behavior. If you want to change and mock the method, then you need to stub it.
 
+## MockMvc class
+Use this class to perform HTTP requests. First, the Spring boot app started and test methods are called. 
+```
+@SpringBootTest
+@AutoConfigureMockMvc
+public class PaymentIntegrationTest {
 
+	@Autowired
+	private PaymentRepository paymentRepository;
 
+	@Autowired
+	private MockMvc mockMvc;
+...
+```
+
+## @Transactional
+You can encounter a "not found exception" if the test has multiple **mockMvc** requests because the transaction does not commit when the test running. In this case, you should use **@Transactional** annotation to perform the transaction commit. 
 
