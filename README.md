@@ -9,7 +9,7 @@ Sample project for TDD.
 - Behavior Driven Development (BDD)
 
 # Code Coverage Results 
-![image](https://user-images.githubusercontent.com/3144356/189865580-acaf0120-6815-4b29-8b18-58dee7f72664.png)
+![image](https://user-images.githubusercontent.com/3144356/189870239-18aa2901-df12-4946-8ef2-04ad301f2a44.png)
 
 # Notes
 ## @Mock
