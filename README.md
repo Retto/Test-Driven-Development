@@ -71,3 +71,36 @@ public class PaymentIntegrationTest {
 ## @Transactional
 You can encounter a "not found exception" if the test has multiple **mockMvc** requests because the transaction does not commit when the test running. In this case, you should use **@Transactional** annotation to perform the transaction commit. 
 
+## @SpringBootTest
+Spring-Boot provides an **@SpringBootTest** annotation which provides spring-boot features over and above of the spring-test module. This annotation works by creating the ApplicationContext used in our tests through SpringApplication. It starts the embedded server, creates a web environment and then enables **@Test** methods to do integration testing.
+
+By default, **@SpringBootTest**  does not start a server. We need to add attribute **webEnvironment** to further refine how your tests run. It has several options:
+
+- **MOCK(Default):** Loads a web ApplicationContext and provides a mock web environment
+
+- **RANDOM_PORT:** Loads a WebServerApplicationContext and provides a real web environment. The embedded server is started and listen on a random port. This is the one should be used for the integration test
+
+- **DEFINED_PORT:** Loads a WebServerApplicationContext and provides a real web environment.
+
+- **NONE:** Loads an ApplicationContext by using SpringApplication but does not provide any web environment
+
+## MockMvc vs WebTestClient vs TestRestTemplate
+All three tools help us invoke and test our Spring Boot application's endpoint. The main difference lies in whether we can perform requests against a mocked servlet environment and/or our servlet container runtime. Furthermore, not all tools are designed to work with both **Spring Web MVC (blocking)** and **Spring WebFlux (non-blocking)**.
+
+In short, these three technologies serve the following purpose:
+
+**MockMvc:** Fluent API to interact with a mocked servlet environment. No real HTTP communication. The perfect solution to verify blocking Spring WebMVC controller endpoints. We either bootstrap the MockMvc instance on our own, use @WebMvcTest or @SpringBootTest (without a port configuration). Includes API support for verifying the model or view name of a server-side rendered view endpoint.
+
+**WebTestClient:** Originally the testing tool for invoking and verifying Spring WebFlux endpoints. However, we can also use it to write tests for a running servlet container or MockMvc. Fluent API that allows chaining the request and verification. There's no API support for verifying the model or view name of a server-side rendered view endpoint.
+
+**TestRestTemplate:** Test and verify controller endpoints for a running servlet container over HTTP. Less fluent API. If our team is still familiar with the RestTemplate and hasn't made the transition to the WebTestClient (yet), we may favor this for our integration tests. We can't use the TestRestTemplate to interact with mocked servlet environment or Spring WebFlux endpoints. There's no API support for verifying the model or view name of a server-side rendered view endpoint.
+
+![different  methods](https://user-images.githubusercontent.com/3144356/189852106-049d4ce1-190c-4314-b5ee-9aab54fabb5e.png)
+
+# References:
+- https://docs.spring.io/spring-framework/docs/current/reference/html/testing.html#testing
+- https://docs.spring.io/spring-boot/docs/2.7.3/reference/html/features.html#features.testing
+- https://rieckpil.de/spring-boot-testing-mockmvc-vs-webtestclient-vs-testresttemplate/
+- https://dzone.com/articles/integration-testing-in-spring-boot-1
+- https://www.baeldung.com/java-spring-mockito-mock-mockbean
+- https://github.com/amigoscode/software-testing
