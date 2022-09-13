@@ -8,6 +8,9 @@ Sample project for TDD.
 - Test Driven Development (TDD)
 - Behavior Driven Development (BDD)
 
+# Code Coverage Results 
+![image](https://user-images.githubusercontent.com/3144356/189865580-acaf0120-6815-4b29-8b18-58dee7f72664.png)
+
 # Notes
 ## @Mock
 We can do this either by using the **@RunWith(MockitoJUnitRunner.class)** to run the test, or by calling the **MockitoAnnotations.openMocks()** method explicitly.
